@@ -11,4 +11,9 @@ Class Users extends CI_Model {
             return true; 
         } 
   	}
+
+  	public function checkUser($data){
+  		$value = $this->db->where('username',$data['username']);
+  		return $value;
+  	}
 } 

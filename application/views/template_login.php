@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <style type="text/css">
 	
-	body{background: #eee url(public/images/login/sativa.png);}
+	body{background: #eee url(./public/images/login/sativa.png);}
 html,body{
     position: relative;
     height: 100%;
@@ -72,7 +72,7 @@ html,body{
     border-radius: 100%;
     border: 2px solid #aaa;
     background-size: cover;
-    background-image: url(public/images/login/telescope.png);
+    background-image: url(./public/images/login/telescope.png);
 }
 
 .form-box input{
@@ -174,7 +174,8 @@ html,body{
                 </div>
 
                 <div class="div-sigin-up">
-	                <form action="index.php/LoginController/CreateUserLogin" method="post">
+                    <?php echo validation_errors(); ?>
+                         <?php echo form_open('LoginController/CreateUserLogin'); ?>
 	                    <input name="username" type="text" placeholder="username">
 	                    <input type="password" name="password" placeholder="password">
 	                    <input type="password" name="confirmPassword" placeholder="confirm password">
@@ -189,7 +190,14 @@ html,body{
 
 <script>
 $(function(){
-	$('.div-sigin-up').toggle('hide-show');
+    var textErrorForm ='<?=$this->session->flashdata('username')?>';
+    if(textErrorForm !== ""){
+        $('.div-login').toggle('hide-show');
+        alertOutputDanger(textErrorForm);
+    }else{
+        $('.div-sigin-up').toggle('hide-show');
+    }
+	
 
 	$('.textRightMouse').on('click',function(){
 		$('.div-login').toggle('hide-show');
