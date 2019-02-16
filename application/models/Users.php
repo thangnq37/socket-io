@@ -13,7 +13,7 @@ Class Users extends CI_Model {
   	}
 
   	public function checkUser($data){
-  		$value = $this->db->where('username',$data['username']);
+  		$value = $this->db->select("*")->where("username",$data["username"])->get('users')->result_array();
   		return $value;
   	}
 } 

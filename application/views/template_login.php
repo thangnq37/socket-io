@@ -5,12 +5,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
 <style type="text/css">
 	
-	body{background: #eee url(./public/images/login/sativa.png);}
+	body{background: #eee url(<?php echo base_url(); ?>/public/images/login/sativa.png);}
 html,body{
     position: relative;
     height: 100%;
@@ -72,7 +73,7 @@ html,body{
     border-radius: 100%;
     border: 2px solid #aaa;
     background-size: cover;
-    background-image: url(./public/images/login/telescope.png);
+    background-image: url(<?php echo base_url(); ?>/public/images/login/telescope.png);
 }
 
 .form-box input{
@@ -168,19 +169,19 @@ html,body{
 	                <form action="" method="">
 	                    <input name="user" type="text" placeholder="username">
 	                    <input type="password" placeholder="password">
-	                    <button class="btn btn-info btn-block login" type="submit">Login</button>
-	                    <a class="textRightMouse">Sign Up</a>
+	                    <button class="btn btn-info btn-block login" type="submit"><?=lang('LOGIN')?></button>
+	                    <a class="textRightMouse"><?=lang('SIGN_UP')?></a>
 	                </form>
                 </div>
 
                 <div class="div-sigin-up">
-                    <?php echo validation_errors(); ?>
-                         <?php echo form_open('LoginController/CreateUserLogin'); ?>
+                    <?php echo form_open(''); ?>
+                    	<input type="hidden" name="language" value="EN">
 	                    <input name="username" type="text" placeholder="username">
 	                    <input type="password" name="password" placeholder="password">
 	                    <input type="password" name="confirmPassword" placeholder="confirm password">
-	                    <button class="btn btn-success btn-block login" type="submit">Sign Up</button>
-	                    <a class="textRightMouse">Login</a>
+	                    <button class="btn btn-success btn-block login" type="submit"><?=lang('SIGN_UP')?></button>
+	                    <a class="textRightMouse"><?=lang('LOGIN')?></a>
 	                </form>
                 </div>
             </div>
@@ -190,7 +191,7 @@ html,body{
 
 <script>
 $(function(){
-    var textErrorForm ='<?=$this->session->flashdata('username')?>';
+    var textErrorForm ='<?=form_error('username');?>';
     if(textErrorForm !== ""){
         $('.div-login').toggle('hide-show');
         alertOutputDanger(textErrorForm);
