@@ -94,10 +94,14 @@ html,body{
 
 .form-box input[type="text"]{
     border-radius: 5px 5px 0 0;
-    text-transform: lowercase;
 }
 
-.form-box input[type="password"]{
+.form-box input[type="password"],.form-box input[type="confirmPassword"]{
+    border-top: 0;
+}
+
+
+.form-box input[name="email"],.form-box input[name="password_login"]{
     border-radius: 0 0 5px 5px;
     border-top: 0;
 }
@@ -153,34 +157,96 @@ html,body{
 	cursor: pointer;
 }
 
+.languagepicker {
+    background-color: #FFF;
+    display: inline-block;
+    padding: 0;
+    height: 40px;
+    overflow: hidden;
+    transition: all .3s ease;
+    margin-top:10px;
+    vertical-align: top;
+    float: right;
+}
+
+.languagepicker:hover {
+    /* don't forget the 1px border */
+    height: 81px;
+}
+
+.languagepicker a{
+    color: #000;
+    text-decoration: none;
+}
+
+.languagepicker li {
+    display: block;
+    padding: 0px 20px;
+    line-height: 40px;
+    border-top: 1px solid #EEE;
+}
+
+.languagepicker li:hover{
+    background-color: #EEE;
+}
+
+.languagepicker a:first-child li {
+    border: none;
+    background: #FFF !important;
+}
+
+.languagepicker li img {
+    margin-right: 5px;
+}
+
+.roundborders {
+    border-radius: 5px;
+}
+
+.large:hover {
+    /* 
+    don't forget the 1px border!
+    The first language is 40px heigh, 
+    the others are 41px
+    */
+    height: 126px;
+}
+
 .hide-show{
 	display: none;
 }
 </style>
 </head>
 <body>
-
 <div class="container">
+    <div>
+        <ul class="languagepicker roundborders large">
+            <a href="#"><li><img src="<?php echo base_url(); ?>/public/images/login/translate.png"/><?=lang('LANGUAGE')?></li></a>
+            <a href="<?php echo base_url("index.php/LanguageSwitcher/switchLang/VI"); ?>"><li><img src="<?php echo base_url(); ?>/public/images/login/vietnam.png"/>Việt Nam</li></a>
+            <a href="<?php echo base_url("index.php/LanguageSwitcher/switchLang/EN"); ?>"><li><img src="<?php echo base_url(); ?>/public/images/login/united-states-of-america.png"/>English</li></a>
+        </ul>
+    </div>
 	<div class="login-container">
             <div id="output"></div>
             <div class="avatar"></div>
             <div class="form-box">
             	<div class="div-login">
-	                <form action="" method="">
-	                    <input name="user" type="text" placeholder="username">
-	                    <input type="password" placeholder="password">
-	                    <button class="btn btn-info btn-block login" type="submit"><?=lang('LOGIN')?></button>
+	                <?php echo form_open(''); ?>
+                        <input type="hidden" name="type-post">
+	                    <input name="username_login" type="text" placeholder="<?=lang('USERNAME')?>">
+	                    <input type="password" name="password_login" placeholder="<?=lang('PASSWORD')?>">
+	                    <button class="btn btn-info btn-block login" type="submit" name="submit" value="login"><?=lang('LOGIN')?></button>
 	                    <a class="textRightMouse"><?=lang('SIGN_UP')?></a>
 	                </form>
                 </div>
 
                 <div class="div-sigin-up">
                     <?php echo form_open(''); ?>
-                    	<input type="hidden" name="language" value="EN">
-	                    <input name="username" type="text" placeholder="username">
-	                    <input type="password" name="password" placeholder="password">
-	                    <input type="password" name="confirmPassword" placeholder="confirm password">
-	                    <button class="btn btn-success btn-block login" type="submit"><?=lang('SIGN_UP')?></button>
+	                    <input name="username" type="text" placeholder="<?=lang('USERNAME')?>">
+                        <input type="password" name="password" placeholder="<?=lang('PASSWORD')?>">
+	                    <input type="password" name="confirmPassword" placeholder="<?=lang('CONF_PASSWORD')?>">
+                        <input type="email" name="email" placeholder="<?=lang('EMAIL')?>">
+	                    <button class="btn btn-success btn-block login" type="submit" name="submit" value="signup"><?=lang('SIGN_UP')?></button>
 	                    <a class="textRightMouse"><?=lang('LOGIN')?></a>
 	                </form>
                 </div>
@@ -190,7 +256,14 @@ html,body{
 </div>
 
 <script>
+var test;
 $(function(){
+
+    const errTextfield = "<?=lang('ERROR_USERNAME_EMPTY')?>";
+    const errTextPassword = "<?=lang('ERROR_PASSWORD_EMPTY')?>";
+    const errTextConfirmPassword = "<?=lang('ERROR_CONF_PASSWORD')?>";
+    const errPasswordTextConfirmPassword = "<?=lang('ERROR_PASSWORD_NOT_CF_PASS')?>";
+
     var textErrorForm ='<?=form_error('username');?>';
     if(textErrorForm !== ""){
         $('.div-login').toggle('hide-show');
@@ -221,29 +294,41 @@ $(function(){
         });
 	}
 
-	var textfield = $("input[name=username]");
-	const errTextfield = "Vui lòng nhập tài khoảng";
-	const errTextPassword = "Vui lòng nhập mật khẩu";
-	const errTextConfirmPassword = "Vui lòng nhập xác nhận mật khẩu";
-	const errPasswordTextConfirmPassword = "Mật khẩu xác nhận không trùng khớp";
-	var textPassword = $("input[name=password]");
-	var textConfirmPassword = $("input[name=confirmPassword]");
+	
     $('button[type="submit"]').click(function(e) {
+        var textfield = $("input[name=username]");
+        var textPassword = $("input[name=password]");
+        var textConfirmPassword = $("input[name=confirmPassword]");
+        var textfieldLogin = $("input[name=username_login]");
+        var textPasswordLogin = $("input[name=password_login]");
+    
         //little validation just to check username
-        if (textfield.val() == "") {
-            alertOutputDanger(errTextfield);
-            e.preventDefault();
-        } else if (textPassword.val() == "") {
-            alertOutputDanger(errTextPassword);
-            e.preventDefault();
-            
-        } else if (textConfirmPassword.val() == ""){
-        	alertOutputDanger(errTextConfirmPassword);
-        	e.preventDefault();
-        } else if (textConfirmPassword.val() != textPassword.val()){
-        	alertOutputDanger(errPasswordTextConfirmPassword);
-        	e.preventDefault();
+        let valueButton = $(e.target).val();
+        if(valueButton === "signup"){
+            if (textfield.val() == "") {
+                alertOutputDanger(errTextfield);
+                e.preventDefault();
+            } else if (textPassword.val() == "") {
+                alertOutputDanger(errTextPassword);
+                e.preventDefault();
+                
+            } else if (textConfirmPassword.val() == ""){
+                alertOutputDanger(errTextConfirmPassword);
+                e.preventDefault();
+            } else if (textConfirmPassword.val() != textPassword.val()){
+                alertOutputDanger(errPasswordTextConfirmPassword);
+                e.preventDefault();
+            }
+        }else if(valueButton === "login"){
+            if (textfieldLogin.val() == "") {
+                alertOutputDanger(errTextfield);
+                e.preventDefault();
+            } else if (textPasswordLogin.val() == "") {
+                alertOutputDanger(errTextPassword);
+                e.preventDefault();   
+            }
         }
+        
 
     });
 });

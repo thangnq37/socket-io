@@ -118,7 +118,7 @@ $autoload['config'] = array();
 |
 */
 
-$autoload['language'] = array();//'../VI/error_lang.php'
+$autoload['language'] = array();
 
 /*
 | -------------------------------------------------------------------
