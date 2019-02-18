@@ -264,13 +264,25 @@ $(function(){
     const errTextConfirmPassword = "<?=lang('ERROR_CONF_PASSWORD')?>";
     const errPasswordTextConfirmPassword = "<?=lang('ERROR_PASSWORD_NOT_CF_PASS')?>";
 
-    var textErrorForm ='<?=form_error('username');?>';
-    if(textErrorForm !== ""){
+    var textErrorForm ='<?=form_error('username')?>';
+    var textErrorFormLogin ='<?=form_error('username_login');?>';
+    if(textErrorForm !== "" ){
         $('.div-login').toggle('hide-show');
         alertOutputDanger(textErrorForm);
-    }else{
+    }else if(textErrorFormLogin === "" && textErrorForm === ""){
         $('.div-sigin-up').toggle('hide-show');
+        
+    }else {
+        if(textErrorFormLogin !== ""){
+            $('.div-sigin-up').toggle('hide-show');
+            alertOutputDanger(textErrorFormLogin);
+        }else{
+            $('.div-login').toggle('hide-show');
+        }
     }
+
+    
+    
 	
 
 	$('.textRightMouse').on('click',function(){
