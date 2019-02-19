@@ -256,7 +256,7 @@ html,body{
 </div>
 
 <script>
-var test;
+
 $(function(){
 
     const errTextfield = "<?=lang('ERROR_USERNAME_EMPTY')?>";
@@ -264,7 +264,7 @@ $(function(){
     const errTextConfirmPassword = "<?=lang('ERROR_CONF_PASSWORD')?>";
     const errPasswordTextConfirmPassword = "<?=lang('ERROR_PASSWORD_NOT_CF_PASS')?>";
 
-    var textErrorForm ='<?=form_error('username')?>';
+    var textErrorForm ='<?=form_error('username').form_error('email').form_error('password')?>';
     var textErrorFormLogin ='<?=form_error('username_login');?>';
     if(textErrorForm !== "" ){
         $('.div-login').toggle('hide-show');

@@ -12,6 +12,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 $lang['CONF_PASSWORD'] = "Mật khẩu xác nhận";
 $lang['EMAIL'] = "Email";
 $lang['ERROR_CONF_PASSWORD'] = "Vui lòng nhập xác nhận mật khẩu";
+$lang['ERROR_EMAIL_ISSET'] = "Email đã có người sử dụng";
 $lang['ERROR_MAX_LENGTH'] = "{field} nhập nhiều nhất {param} ký tự";
 $lang['ERROR_MIN_LENGTH'] = "{field} nhập ít nhất {param} ký tự";
 $lang['ERROR_PASSWORD_EMPTY'] = "Vui lòng nhập mật khẩu";

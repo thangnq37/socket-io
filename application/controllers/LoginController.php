@@ -7,6 +7,7 @@ class LoginController extends CI_Controller {
 
 	private $aesCode;
 	private $user;
+	private $dataUser;
 
 	function __construct() {
         parent::__construct();
@@ -22,10 +23,10 @@ class LoginController extends CI_Controller {
 	{
 		// $this->session->set_userdata('site_lang',$this->input->post('language'));
 		// $this->updatelangfile('VI','language');
-  //       $this->updatelangfile('EN','language');
+  		// $this->updatelangfile('EN','language');
         $user = $this->session->userdata('user');
-  		if(!is_string(($user))){
-		  	redirect('home');
+  		if(!is_string(($user)) && !empty($user)){
+		  	redirect('client/HomeController/index');
 		  	exit();
   		}
 		if($this->input->post('submit') === "login"){
@@ -37,14 +38,16 @@ class LoginController extends CI_Controller {
 	        else
 	        {
 		        $this->session->set_userdata('user',$this->user);
-		  		$this->load->view('home');
+		  		redirect('client/HomeController/index');
+		  		exit();
 	        }
 		}else{
-			
+			$this->dataUser = array('username' => $this->input->post('username'), 'password' => $this->EncodeAESPassword($this->input->post('password')), 'email' => $this->input->post('email'));
 			$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|max_length[50]|callback_username_check',array('required'=>$this->lang->line('ERROR_REQUIRED'), 'min_length'=>$this->lang->line('ERROR_MIN_LENGTH'),'max_length'=>$this->lang->line('ERROR_MAX_LENGTH')));
 
 			$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|max_length[50]',array('required'=>$this->lang->line('ERROR_REQUIRED'), 'min_length'=>$this->lang->line('ERROR_MIN_LENGTH'),'max_length'=>$this->lang->line('ERROR_MAX_LENGTH')));
 
+			$this->form_validation->set_rules('email', 'Email', 'required|callback_email_check',array('required'=>$this->lang->line('ERROR_REQUIRED')));
 
 			if ($this->form_validation->run() == false)
 	        {
@@ -52,9 +55,8 @@ class LoginController extends CI_Controller {
 	        }
 	        else
 	        {
-		        // $result = $this->Users->insertUser($data);
-		        // var_dump($data);
-		  		die();
+		        $result = $this->Users->insertUser($this->dataUser);
+		        $this->load->view('template_login');
 	        }
 		}
 		
@@ -73,8 +75,8 @@ class LoginController extends CI_Controller {
 		return $result;
 	}
 
-	public function username_check($str){
-		$data = array('username' => $this->input->post('username'), 'password' => $this->input->post('password'));
+	public function username_check(){
+		$data = $this->dataUser;
 		$result = $this->Users->checkUser($data);
 		if(count($result) > 0){
 			$this->form_validation->set_message('username', $this->lang->line('ERROR_USER_NOT_EXIT'));
@@ -84,7 +86,7 @@ class LoginController extends CI_Controller {
 		}
 	}
 
-	public function username_login($str){
+	public function username_login(){
 		$data = array('username' => $this->input->post('username_login'), 'password' => $this->EncodeAESPassword($this->input->post('password_login')));
 		$result = $this->Users->checkUserPass($data);
 		if(is_object($result)){
@@ -92,6 +94,17 @@ class LoginController extends CI_Controller {
 			return true;
 		}else{
 			$this->form_validation->set_message('username_login', $result);
+			return false;	
+		}
+	}
+
+	public function email_check(){
+		$data = $this->dataUser;
+		$result = $this->Users->checkEmail($data);
+		if($result === true){
+			return true;
+		}else{
+			$this->form_validation->set_message('email_check', $result);
 			return false;	
 		}
 	}

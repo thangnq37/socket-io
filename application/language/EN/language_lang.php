@@ -12,6 +12,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 $lang['CONF_PASSWORD'] = "Confirm password";
 $lang['EMAIL'] = "Email";
 $lang['ERROR_CONF_PASSWORD'] = "Please fill confirm password";
+$lang['ERROR_EMAIL_ISSET'] = "";
 $lang['ERROR_MAX_LENGTH'] = "";
 $lang['ERROR_MIN_LENGTH'] = "";
 $lang['ERROR_PASSWORD_EMPTY'] = "Please fill password";

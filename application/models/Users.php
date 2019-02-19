@@ -8,8 +8,10 @@ Class Users extends CI_Model {
 
   	public function insertUser($data){
   		if ($this->db->insert("users", $data)) { 
-            return true; 
-        } 
+        return true; 
+      }else{
+        return false;
+      } 
   	}
 
   	public function checkUser($data){
@@ -28,6 +30,15 @@ Class Users extends CI_Model {
         }else{
           return $this->lang->line("ERROR_USER_PASS_INCORRECT");
         } 
+      }
+    }
+
+    public function checkEmail($data){
+      $value = $this->db->select("*")->where("email",$data["email"])->get('users')->result_array();
+      if(count($value) <= 0){
+        return true;
+      }else{
+          return $this->lang->line("ERROR_EMAIL_ISSET");
       }
     }
 } 
